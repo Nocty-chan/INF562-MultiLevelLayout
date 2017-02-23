@@ -44,9 +44,7 @@ public class GraphReader_MTX extends GraphReader {
     		int index=i; // recall that vertices must have indices between 0 and n-1
     		Point_3 p=new Point_3(0., 0., 0.); // vertex coordinates are still not defined
     		Color color=null;
-    		Node newNode = new Node(index, p , color);
-    		newNode.setLabel(DrawGraph.getVertexLabel(newNode));
-    		g.addNode(newNode);
+    		g.addNode( new Node(index, p , color, "v"+index));
     		i++;
     	}
     	//System.out.println("done ("+g.sizeVertices()+")");

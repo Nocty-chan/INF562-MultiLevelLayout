@@ -109,10 +109,12 @@ public class MultilevelLayout extends Layout {
 		  nodes.add(v);
 		  v.tag = 0;
 		}
+		int count = 0;
 		/* Iterate over all nodes of coarserGraph */
-		while(!nodes.isEmpty()) {
+		while(!nodes.isEmpty() && count == 0) {
 		  Node v = nodes.pop();
 		  if (v.tag == 1) continue;
+		  count ++;
 		  /* Get minimal weight neighbour that is unmarked */
 		  double minWeight = Double.MAX_VALUE;
 		  Node minWeightNeighbour = null;
@@ -137,17 +139,18 @@ public class MultilevelLayout extends Layout {
 		    
         //Remove node 
         coarserGraph.removeNode(minWeightNeighbour);
-        
+
         // Update tag for all neighbours and descendant.
-		    for (Node neighbour : v.neighbors) {
+
+        for (Node neighbour : v.neighbors) {
 		      neighbour.tag = 1;
 		      System.out.println(neighbour.getLabel());
 		      g.getNode(neighbour.getLabel()).descendant = neighbour;
 		    }
-		    
+		    /*
 		    // Update descendant and tag for collapsed vertices.
         g.getNode(minWeightNeighbour.getLabel()).descendant = v;
-        g.getNode(v.getLabel()).descendant = v;
+        g.getNode(v.getLabel()).descendant = v;*/
 
 		    minWeightNeighbour.tag = 1;
 		    v.tag = 1;

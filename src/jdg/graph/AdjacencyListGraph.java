@@ -55,15 +55,6 @@ public class AdjacencyListGraph implements Graph {
 	  return copy;
 	}
 
-	 public AdjacencyListGraph getCopyWithoutEdge() {
-	    AdjacencyListGraph copy = new AdjacencyListGraph();
-	    for (int i = 0; i < this.vertices.size(); i++) {
-	      copy.addNode(this.vertices.get(i).getCopy());
-	    }
-	    System.out.println("Edges: " + copy.sizeEdges());
-	    return copy;
-	  }
-	 
 	public Node getNode(String label) {
 		if(this.labelMap!=null && this.labelMap.containsKey(label)==true) {
 			return this.labelMap.get(label);
