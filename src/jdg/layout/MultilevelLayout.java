@@ -111,6 +111,10 @@ public class MultilevelLayout extends Layout {
 	 public void coarsenGraph() {
 	   this.graphs = new LinkedList<AdjacencyListGraph>();
 	   this.graphs.add(this.g);
+	   // Set weights */
+	   for (Node v : this.g.vertices) {
+	     v.weight = 1.0d;
+	   }
 	   AdjacencyListGraph coarserGraph = simplify(this.g);
 	   while (coarserGraph != null) {
 	     this.graphs.add(coarserGraph);

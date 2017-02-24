@@ -68,7 +68,7 @@ public class DrawGraph extends PApplet {
 	  public void draw() {
 	    this.background(this.backgroundColor); // set the color of background
 	    
-	    this.display2D(this.selectedLayout); // draw all edges in gray
+	    this.display2D(); // draw all edges in gray
 
 	    if(this.selectedNode!=null) {
 	    	this.drawVertexLabel(this.selectedNode);
@@ -90,8 +90,12 @@ public class DrawGraph extends PApplet {
 		  	case('e'):this.layout.enableCooling();; break;
 		  	case('d'):this.layout.disableCooling();; break;
 		  	case('p'):this.layout.simplify();;break;
-		  	case('r'):this.selectedLayout++;;break;
-		  	case('t'):this.selectedLayout= Math.max(0, this.selectedLayout -1);; break;
+		  	case('r'):
+		  	  this.selectedLayout++;
+          this.inputGraph = this.layout.getGraph(selectedLayout);;break;
+		  	case('t'):
+		  	  this.selectedLayout= Math.max(0, this.selectedLayout -1);
+		  	   this.inputGraph = this.layout.getGraph(selectedLayout); break;
 		  }
 	  }
 	  
@@ -246,7 +250,7 @@ public class DrawGraph extends PApplet {
 			  
 			int[] min=getPoint(new Point_2(ux, uy)); // pixel coordinates of the point in the frame
 		    			
-			String label=this.getVertexLabel(u); // retrieve the vertex label to show
+			String label=this.getVertexLabel(u)+ " weight:" + u.weight; // retrieve the vertex label to show
 			
 			//this.stroke(edgeColor, edgeOpacity);
 			this.fill(200);
@@ -302,10 +306,10 @@ public class DrawGraph extends PApplet {
 		  /**
 		   * Draw the skeleton of a graph in 2D using a Processing frame
 		   */
-		  public void display2D(int selectedLayout) {
+		  public void display2D() {
 			  if(this.inputGraph==null)
 				  return;
-			  AdjacencyListGraph graph=this.layout.getGraph(selectedLayout); // current graph to draw
+			  AdjacencyListGraph graph=this.inputGraph; // current graph to draw
 			  if(graph==null) // if the graph is not defined exit
 				  return;
 			  
