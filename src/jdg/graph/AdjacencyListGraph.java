@@ -41,6 +41,7 @@ public class AdjacencyListGraph implements Graph {
 		}
 	}
 	
+	/* Copies adjacency list graph */
 	public AdjacencyListGraph getCopy() {
 	  AdjacencyListGraph copy = new AdjacencyListGraph(this.vertices.size());
 	  for (int i = 0; i < this.vertices.size(); i++) {

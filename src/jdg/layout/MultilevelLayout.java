@@ -108,17 +108,22 @@ public class MultilevelLayout extends Layout {
 	  System.out.println("Simplifying graph");
 	  if (g.sizeVertices() < threshold) return g;
 		AdjacencyListGraph coarserGraph = g.getCopy();
-    
+    /* Initialize all nodes
+     * By default, tag is 0 and descendant is itself in new graph.
+     */
 		Stack<Node> nodes = new Stack<Node>();
 		for (Node v: coarserGraph.vertices) {
 		  nodes.add(v);
 		  v.tag = 0;
+		  g.getNode(v.getLabel()).descendant = v;
 		}
 		
 		int count = 0;
 		/* Iterate over all nodes of coarserGraph */
-		while(!nodes.isEmpty() && count == 0) {
-		  Node v = nodes.get(randomInt.nextInt(nodes.size()));
+		while(!nodes.isEmpty()) {
+		  int index = randomInt.nextInt(nodes.size());
+		  Node v = nodes.get(index);
+		  nodes.remove(index);
 		  if (v.tag == 1) continue;
 		  count++;
 		  /* Get minimal weight neighbour that is unmarked */
@@ -130,42 +135,35 @@ public class MultilevelLayout extends Layout {
 		      minWeightNeighbour = u;
 		    }
 		  }
-		  System.out.println("Collapsing edge ("+minWeightNeighbour.getLabel() + v.getLabel());
 		  if (minWeightNeighbour != null) {
 		    //Collapse (minWeightNeighbour,v).
-		    
+
+	      System.out.println("Collapsing edge ("+minWeightNeighbour.getLabel() + v.getLabel());
 		    //Update neighbours list.
 		    ArrayList<Node> neighbours = (ArrayList<Node>) minWeightNeighbour.neighbors.clone();
 		    for (Node neighbour : neighbours) {
-		      System.out.println("COnsidering neighbour: " +neighbour.getLabel());
 		      if (!neighbour.equals(v)) {
 		        coarserGraph.addEdge(v, neighbour);
 		        coarserGraph.addEdge(neighbour, v);
-		        System.out.println("Added edge:" + v.getLabel() + neighbour.getLabel());
 	        }
 		    }
 		    
         //Remove node 
         coarserGraph.removeNode(minWeightNeighbour);
-        /*
-        // Update tag for all neighbours and descendant.
+  
+        // Update tag for all neighbours of v
 
         for (Node neighbour : v.neighbors) {
 		      neighbour.tag = 1;
-		      System.out.println(neighbour.getLabel());
-		      g.getNode(neighbour.getLabel()).descendant = neighbour;
 		    }
 		    
 		    // Update descendant and tag for collapsed vertices.
         g.getNode(minWeightNeighbour.getLabel()).descendant = v;
-        g.getNode(v.getLabel()).descendant = v;
-
-		    minWeightNeighbour.tag = 1;
+        minWeightNeighbour.tag = 1;
 		    v.tag = 1;
 		    
 		    //update weights
 		    v.weight +=minWeightNeighbour.weight;
-		    */
 		  }
 		}
 	return coarserGraph;	
