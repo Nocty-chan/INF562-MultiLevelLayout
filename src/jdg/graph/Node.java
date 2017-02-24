@@ -46,7 +46,7 @@ public class Node {
 	    
 	    public Node getCopy() {
 	      Node copy = new Node(this.index);
-	      copy.p = this.p;
+	      copy.p = new Point_3(this.p);
 	      copy.label = this.label;
 	      copy.tag = this.tag;
 	      copy.weight = this.weight;

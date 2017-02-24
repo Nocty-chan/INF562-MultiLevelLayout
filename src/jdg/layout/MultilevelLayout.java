@@ -20,18 +20,11 @@ import jdg.graph.Node;
  * @author Luca Castelli Aleardi, Ecole Polytechnique
  * @version fev 2017
  */
-public class MultilevelLayout extends Layout {
+public class MultilevelLayout extends FR91Layout {
 	// parameters of the algorithm
-	public int iterationCount=0; // count the number of performed iterations
-	public double k; // natural spring length
-	public double area; // area of the drawing (width times height)
-	public double C; // step
-	public double gamma; //
-	public boolean useCooling; // say whether performing simulated annealing
 	public static int threshold = 10; //minimal size for coarsening process
 	public LinkedList<AdjacencyListGraph> graphs; // sequence of coarser graphs
 	private static Random randomInt = new Random();
-
 	/**
 	 * Initialize the parameters of the force-directed layout
 	 * 
@@ -40,6 +33,7 @@ public class MultilevelLayout extends Layout {
 	 *  @param h  height of the drawing area
 	 */
 	public MultilevelLayout(AdjacencyListGraph g, double w, double h) {
+	  super(g, w, h);
 		System.out.print("Initializing force-directed method (Walshaw 2003)...");
 		if(g==null) {
 			System.out.println("Input graph not defined");
@@ -51,7 +45,7 @@ public class MultilevelLayout extends Layout {
 		// set the parameters of the algorithm
 		
 		System.out.println("done ("+N+" nodes)");
-		//System.out.println("k="+k+" - temperature="+temperature);
+		System.out.println("k="+k+" - temperature="+temperature);
 		System.out.println(this.toString());
 	}
 	
@@ -97,13 +91,13 @@ public class MultilevelLayout extends Layout {
 	 * Perform the multi-level Force-Directed algorithm.
 	 * Positions of vertices are updated according to their mutual attractive and repulsive forces.
 	 */	
-	public void computeLayout() {
+	public void computeLayoutMultiLevel() {
 		if(iterationCount>=maxIterations)
 			return;
 
 		throw new Error("To be completed");		
 	}
-	
+
 	public void simplify() {
 	  coarsenGraph();
 	}

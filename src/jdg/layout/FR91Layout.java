@@ -54,7 +54,7 @@ public class FR91Layout extends Layout {
 		this.useCooling=true; // use cooling system by default
 		
 		System.out.println("done ("+N+" nodes)");
-		//System.out.println("k="+k+" - temperature="+temperature);
+		System.out.println("k="+k+" - temperature="+temperature);
 		System.out.println(this.toString());
 	}
 	
