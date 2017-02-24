@@ -48,10 +48,11 @@ public class AdjacencyListGraph implements Graph {
 	  }
 	  for (Node v : this.vertices) {
 	    for (Node u : v.neighborsList()) {
-	      copy.addEdge(copy.getNode(v.index), copy.getNode(u.index));
+	      copy.addEdge(copy.getNode(v.getLabel()), copy.getNode(u.getLabel()));
+	      copy.addEdge(copy.getNode(u.getLabel()), copy.getNode(v.getLabel()));
 	    }
 	  }
-	  System.out.println("Edges: " + copy.sizeEdges());
+	  System.out.println("Copy, Edges: " + copy.sizeEdges());
 	  return copy;
 	}
 
@@ -76,6 +77,7 @@ public class AdjacencyListGraph implements Graph {
 			u.removeNeighbor(v);
 		}
 		this.vertices.remove(v); // remove the vertex from the graph*/
+		System.out.println("Removed node: " + v.label);
 	}
 
     public void addEdge(Node a, Node b) {

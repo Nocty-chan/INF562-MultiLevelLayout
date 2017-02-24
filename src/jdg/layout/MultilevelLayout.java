@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
@@ -26,8 +27,9 @@ public class MultilevelLayout extends Layout {
 	public double C; // step
 	public double gamma; //
 	public boolean useCooling; // say whether performing simulated annealing
-	public static int threshold = 10; //minimal size for coarsening process
+	public static int threshold = 2; //minimal size for coarsening process
 	public AdjacencyListGraph[] graphs; // sequence of coarser graphs
+	private static Random randomInt = new Random();
 
 	/**
 	 * Initialize the parameters of the force-directed layout
@@ -106,43 +108,46 @@ public class MultilevelLayout extends Layout {
 	  System.out.println("Simplifying graph");
 	  if (g.sizeVertices() < threshold) return g;
 		AdjacencyListGraph coarserGraph = g.getCopy();
+    
 		Stack<Node> nodes = new Stack<Node>();
 		for (Node v: coarserGraph.vertices) {
 		  nodes.add(v);
 		  v.tag = 0;
 		}
+		
 		int count = 0;
 		/* Iterate over all nodes of coarserGraph */
 		while(!nodes.isEmpty() && count == 0) {
-		  Node v = nodes.pop();
+		  Node v = nodes.get(randomInt.nextInt(nodes.size()));
 		  if (v.tag == 1) continue;
-		  count ++;
+		  count++;
 		  /* Get minimal weight neighbour that is unmarked */
 		  double minWeight = Double.MAX_VALUE;
 		  Node minWeightNeighbour = null;
 		  for (Node u : v.neighborsList()) {
-		    if (v.tag == 0 && minWeight > v.weight) {
-		      minWeight = v.weight;
-		      minWeightNeighbour = v;
+		    if (u.tag == 0 && minWeight > u.weight) {
+		      minWeight = u.weight;
+		      minWeightNeighbour = u;
 		    }
 		  }
+		  System.out.println("Collapsing edge ("+minWeightNeighbour.getLabel() + v.getLabel());
 		  if (minWeightNeighbour != null) {
 		    //Collapse (minWeightNeighbour,v).
 		    
 		    //Update neighbours list.
-
 		    ArrayList<Node> neighbours = (ArrayList<Node>) minWeightNeighbour.neighbors.clone();
 		    for (Node neighbour : neighbours) {
+		      System.out.println("COnsidering neighbour: " +neighbour.getLabel());
 		      if (!neighbour.equals(v)) {
-	          coarserGraph.removeEdge(minWeightNeighbour, neighbour);
-	          coarserGraph.addEdge(v, neighbour);
-		      }
-		      neighbour.tag = 1;
+		        coarserGraph.addEdge(v, neighbour);
+		        coarserGraph.addEdge(neighbour, v);
+		        System.out.println("Added edge:" + v.getLabel() + neighbour.getLabel());
+	        }
 		    }
 		    
         //Remove node 
         coarserGraph.removeNode(minWeightNeighbour);
-
+        /*
         // Update tag for all neighbours and descendant.
 
         for (Node neighbour : v.neighbors) {
@@ -160,9 +165,9 @@ public class MultilevelLayout extends Layout {
 		    
 		    //update weights
 		    v.weight +=minWeightNeighbour.weight;
+		    */
 		  }
 		}
-		System.out.println("Coarser Graph has : " + coarserGraph.sizeVertices() + "vertices.");
 	return coarserGraph;	
 	}
 
