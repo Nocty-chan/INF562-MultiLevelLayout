@@ -289,5 +289,10 @@ public class FR91Layout extends Layout {
 		
 		return result;
 	}
+
+  @Override
+  public AdjacencyListGraph getGraph(int selectedLayout) {
+    return this.g;
+  }
 	
 }

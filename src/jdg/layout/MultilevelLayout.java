@@ -2,6 +2,7 @@ package jdg.layout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
@@ -27,8 +28,8 @@ public class MultilevelLayout extends Layout {
 	public double C; // step
 	public double gamma; //
 	public boolean useCooling; // say whether performing simulated annealing
-	public static int threshold = 2; //minimal size for coarsening process
-	public AdjacencyListGraph[] graphs; // sequence of coarser graphs
+	public static int threshold = 10; //minimal size for coarsening process
+	public LinkedList<AdjacencyListGraph> graphs; // sequence of coarser graphs
 	private static Random randomInt = new Random();
 
 	/**
@@ -53,7 +54,13 @@ public class MultilevelLayout extends Layout {
 		//System.out.println("k="+k+" - temperature="+temperature);
 		System.out.println(this.toString());
 	}
-
+	
+	public AdjacencyListGraph getGraph(int selectedGraph) {
+	  if (this.graphs!= null && selectedGraph < this.graphs.size()) {
+	    return this.graphs.get(selectedGraph);
+	  }
+	  return this.g;
+	}
 	/**
 	 * Enable cooling process
 	 */	
@@ -98,15 +105,25 @@ public class MultilevelLayout extends Layout {
 	}
 	
 	public void simplify() {
-	  
+	  coarsenGraph();
 	}
-
+	
+	 public void coarsenGraph() {
+	   this.graphs = new LinkedList<AdjacencyListGraph>();
+	   this.graphs.add(this.g);
+	   AdjacencyListGraph coarserGraph = simplify(this.g);
+	   while (coarserGraph != null) {
+	     this.graphs.add(coarserGraph);
+	     coarserGraph = simplify(coarserGraph);
+	   }
+	   System.out.println("Coarsening process created "+ this.graphs.size() + "graphs.");
+	 }
 	/**
 	 * Given g, compute a coarser graph g', obtained performing a maximal sequence of edge collapses
 	 */	
 	public static AdjacencyListGraph simplify(AdjacencyListGraph g) {
 	  System.out.println("Simplifying graph");
-	  if (g.sizeVertices() < threshold) return g;
+	  if (g.sizeVertices() < threshold) return null;
 		AdjacencyListGraph coarserGraph = g.getCopy();
     /* Initialize all nodes
      * By default, tag is 0 and descendant is itself in new graph.

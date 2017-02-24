@@ -20,7 +20,7 @@ import Jcg.geometry.Vector_2;
 public class DrawGraph extends PApplet {
     // coordinates of the bounding box
     protected double xmin=Double.MAX_VALUE, xmax=Double.MIN_VALUE, ymin=Double.MAX_VALUE, ymax=Double.MIN_VALUE;
-
+    private int selectedLayout = 0;
     // parameters for edge rendering
     double boundaryThickness=0.5;
     private int backgroundColor=255;
@@ -29,7 +29,7 @@ public class DrawGraph extends PApplet {
         
     /** node selected with mouse click (to show)  */
     public Node selectedNode=null; 
-	public Point_2 current; // coordinates of the selected point
+	  public Point_2 current; // coordinates of the selected point
     
     /** Layout algorithm  */
     public Layout layout;
@@ -56,8 +56,8 @@ public class DrawGraph extends PApplet {
 		  this.b=new Point_2(w2, h2); // top right corner of the drawing region
 		    	      
 	      // set the graph layout method
-	      this.layout=new FR91Layout(inputGraph, sizeX, sizeY); // force-directed method (Fruchterman Reingold)
-		  
+	    //this.layout=new FR91Layout(inputGraph, sizeX, sizeY); // force-directed method (Fruchterman Reingold)
+		  this.layout = new MultilevelLayout(inputGraph, sizeX, sizeY);
 		  // at the beginning the nodes are placed at random
 		  this.layout.setRandomPoints(inputGraph, w2, h2);
 	  }
@@ -68,7 +68,7 @@ public class DrawGraph extends PApplet {
 	  public void draw() {
 	    this.background(this.backgroundColor); // set the color of background
 	    
-	    this.display2D(); // draw all edges in gray
+	    this.display2D(this.selectedLayout); // draw all edges in gray
 
 	    if(this.selectedNode!=null) {
 	    	this.drawVertexLabel(this.selectedNode);
@@ -90,6 +90,8 @@ public class DrawGraph extends PApplet {
 		  	case('e'):this.layout.enableCooling();; break;
 		  	case('d'):this.layout.disableCooling();; break;
 		  	case('p'):this.layout.simplify();;break;
+		  	case('r'):this.selectedLayout++;;break;
+		  	case('t'):this.selectedLayout= Math.max(0, this.selectedLayout -1);; break;
 		  }
 	  }
 	  
@@ -300,10 +302,10 @@ public class DrawGraph extends PApplet {
 		  /**
 		   * Draw the skeleton of a graph in 2D using a Processing frame
 		   */
-		  public void display2D() {
+		  public void display2D(int selectedLayout) {
 			  if(this.inputGraph==null)
 				  return;
-			  AdjacencyListGraph graph=inputGraph; // current graph to draw
+			  AdjacencyListGraph graph=this.layout.getGraph(selectedLayout); // current graph to draw
 			  if(graph==null) // if the graph is not defined exit
 				  return;
 			  

@@ -77,5 +77,8 @@ public abstract class Layout {
 			}
 		}
 	}
+
+  public abstract AdjacencyListGraph getGraph(int selectedLayout);
+   
 	
 }
