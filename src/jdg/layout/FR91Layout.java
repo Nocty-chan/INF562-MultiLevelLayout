@@ -23,7 +23,7 @@ public class FR91Layout extends Layout {
 	public boolean useCooling; // say whether performing simulated annealing
 	
 	public int iterationCount=0; // count the number of performed iterations
-	private int countRepulsive=0; // count the number of computed repulsive forces (to measure time performances)
+	public int countRepulsive=0; // count the number of computed repulsive forces (to measure time performances)
 	
 	/**
 	 * Initialize the parameters of the force-directed layout
@@ -51,7 +51,7 @@ public class FR91Layout extends Layout {
 		this.temperature=w/10.; // the temperature is a fraction of the width of the drawing area
 		this.minTemperature=0.01;
 		this.coolingConstant=0.50;
-		this.useCooling=true; // use cooling system by default
+		this.useCooling=false; // not use cooling system by default
 		
 		System.out.println("done ("+N+" nodes)");
 		System.out.println("k="+k+" - temperature="+temperature);
@@ -100,7 +100,7 @@ public class FR91Layout extends Layout {
 	 * Positions of vertices are updated according to their mutual attractive and repulsive forces.
 	 */	
 	
-	public void computeLayout() {
+	public void computeLayout(int selectedGraph) {
 	  computeLayoutOneGraph(this.g);
 	}
 	
@@ -124,7 +124,6 @@ public class FR91Layout extends Layout {
 		for(int i=0;i<graph.sizeVertices();i++) {
 			Node u=graph.vertices.get(i);
 			if(u.degree()>0) { 
-			  System.out.println("Non isolated node: " + i + ".");
 			  // only non isolated nodes are involved in the computation
 				Point_3 p=u.getPoint(); // geometric position of node 'u'
 

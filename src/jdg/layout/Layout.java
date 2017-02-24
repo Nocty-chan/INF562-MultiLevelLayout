@@ -48,7 +48,7 @@ public abstract class Layout {
 	 * Positions of vertices are updated according to their
 	 * mutual attractive and repulsive forces.
 	 */	
-	public abstract void computeLayout();
+	public abstract void computeLayout(int selectedGraph);
 	
 	/**
 	 * Enable cooling process

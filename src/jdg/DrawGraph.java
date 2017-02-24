@@ -83,7 +83,7 @@ public class DrawGraph extends PApplet {
 	  public void keyPressed(){
 		  switch(key) {
 		  	case('z'):this.updateBoundingBox(); break;
-		  	case('c'):this.layout.computeLayout(); break;
+		  	case('c'):this.layout.computeLayout(this.selectedLayout); break;
 		  	case('o'):this.zoom(1.2); break;
 		  	case('i'):this.zoom(0.8); break;
 		  	case('l'):this.layout.draw2D(); break;
