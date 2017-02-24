@@ -91,11 +91,11 @@ public class MultilevelLayout extends FR91Layout {
 	 * Perform the multi-level Force-Directed algorithm.
 	 * Positions of vertices are updated according to their mutual attractive and repulsive forces.
 	 */	
-	public void computeLayoutMultiLevel() {
+	public void computeLayout() {
 		if(iterationCount>=maxIterations)
 			return;
-
-		throw new Error("To be completed");		
+		System.out.println("Computing layout of graph 0");
+		this.computeLayoutOneGraph(this.graphs.get(1));
 	}
 
 	public void simplify() {

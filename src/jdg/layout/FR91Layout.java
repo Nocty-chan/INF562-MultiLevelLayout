@@ -99,7 +99,12 @@ public class FR91Layout extends Layout {
 	 * Perform one iteration of the Force-Directed algorithm.
 	 * Positions of vertices are updated according to their mutual attractive and repulsive forces.
 	 */	
+	
 	public void computeLayout() {
+	  computeLayoutOneGraph(this.g);
+	}
+	
+	public void computeLayoutOneGraph(AdjacencyListGraph graph) {
 		if(iterationCount>=maxIterations)
 			return;
 		
@@ -112,12 +117,12 @@ public class FR91Layout extends Layout {
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 		
 		// first step: for each vertex compute the displacements due to attractive and repulsive forces
-		Vector_3[] attractiveDisp=this.computeAllAttractiveForces(); // displacement due to attractive forces between neighbors
-		Vector_3[] repulsiveDisp=this.computeAllRepulsiveForces(); // displacement due to repulsive forces between all nodes
+		Vector_3[] attractiveDisp=this.computeAllAttractiveForces(graph); // displacement due to attractive forces between neighbors
+		Vector_3[] repulsiveDisp=this.computeAllRepulsiveForces(graph); // displacement due to repulsive forces between all nodes
 		
 		// second step: compute the total displacements and move all nodes to their new locations
-		for(int i=0;i<this.g.sizeVertices();i++) {
-			Node u=this.g.vertices.get(i);
+		for(int i=0;i<graph.sizeVertices();i++) {
+			Node u=graph.vertices.get(i);
 			if(u.degree()>0) { 
 			  System.out.println("Non isolated node: " + i + ".");
 			  // only non isolated nodes are involved in the computation
@@ -151,12 +156,12 @@ public class FR91Layout extends Layout {
 	 * @param u  the vertex to which repulsive forces are applied
 	 * @return 'displacement' a 3d vector storing the displacement of vertex 'u'
 	 */	
-	public Vector_3 computeRepulsiveForce(Node u) {
+	public Vector_3 computeRepulsiveForce(Node u, AdjacencyListGraph graph) {
 		Vector_3 displacement=new Vector_3(0., 0., 0.);
 		Vector_3 delta;
 		Point_3 p=u.getPoint();
 		
-		for(Node v: this.g.vertices) {
+		for(Node v: graph.vertices) {
 			if(v!=null && u!=v && v.degree()>=0) {
 				delta=new Vector_3(v.getPoint(),p);
 				double norm=Math.sqrt(delta.squaredLength().doubleValue());
@@ -205,17 +210,17 @@ public class FR91Layout extends Layout {
 	 * 
 	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
 	 */	
-	public Vector_3[] computeAllRepulsiveForces() {
-		Vector_3[] repulsiveDisp=new Vector_3[this.g.sizeVertices()];
-		for(int i=0;i<this.g.vertices.size();i++)
+	public Vector_3[] computeAllRepulsiveForces(AdjacencyListGraph graph) {
+		Vector_3[] repulsiveDisp=new Vector_3[graph.sizeVertices()];
+		for(int i=0;i<graph.vertices.size();i++)
 			repulsiveDisp[i]=new Vector_3(0., 0., 0.);
 		
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 		
 		int countVertices=0;
-		for(Node u: this.g.vertices) {
+		for(Node u: graph.vertices) {
 			//repulsiveForce(u, repulsiveDisp); // faster version (forces are computed only once)
-			repulsiveDisp[countVertices]=computeRepulsiveForce(u); // slow version (forces are computed twice)
+			repulsiveDisp[countVertices]=computeRepulsiveForce(u, graph); // slow version (forces are computed twice)
 			countVertices++;
 		}
     	endTime=System.nanoTime();
@@ -252,12 +257,12 @@ public class FR91Layout extends Layout {
 	 * 
 	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
 	 */	
-	public Vector_3[] computeAllAttractiveForces() {
-		Vector_3[] attractiveDisp=new Vector_3[this.g.sizeVertices()];
+	public Vector_3[] computeAllAttractiveForces(AdjacencyListGraph graph) {
+		Vector_3[] attractiveDisp=new Vector_3[graph.sizeVertices()];
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 		
 		int i=0;
-		for(Node u: this.g.vertices) {
+		for(Node u: graph.vertices) {
 			attractiveDisp[i]=computeAttractiveForce(u);
 			i++;
 		}
