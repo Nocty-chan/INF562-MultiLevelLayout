@@ -26,6 +26,7 @@ public class MultilevelLayout extends Layout {
 	public double C; // step
 	public double gamma; //
 	public boolean useCooling; // say whether performing simulated annealing
+	public static int threshold = 10; //minimal size for coarsening process
 	public AdjacencyListGraph[] graphs; // sequence of coarser graphs
 
 	/**
@@ -103,6 +104,7 @@ public class MultilevelLayout extends Layout {
 	 */	
 	public static AdjacencyListGraph simplify(AdjacencyListGraph g) {
 	  System.out.println("Simplifying graph");
+	  if (g.sizeVertices() < threshold) return g;
 		AdjacencyListGraph coarserGraph = g.getCopy();
 		Stack<Node> nodes = new Stack<Node>();
 		for (Node v: coarserGraph.vertices) {
@@ -135,6 +137,7 @@ public class MultilevelLayout extends Layout {
 	          coarserGraph.removeEdge(minWeightNeighbour, neighbour);
 	          coarserGraph.addEdge(v, neighbour);
 		      }
+		      neighbour.tag = 1;
 		    }
 		    
         //Remove node 
@@ -147,10 +150,10 @@ public class MultilevelLayout extends Layout {
 		      System.out.println(neighbour.getLabel());
 		      g.getNode(neighbour.getLabel()).descendant = neighbour;
 		    }
-		    /*
+		    
 		    // Update descendant and tag for collapsed vertices.
         g.getNode(minWeightNeighbour.getLabel()).descendant = v;
-        g.getNode(v.getLabel()).descendant = v;*/
+        g.getNode(v.getLabel()).descendant = v;
 
 		    minWeightNeighbour.tag = 1;
 		    v.tag = 1;
