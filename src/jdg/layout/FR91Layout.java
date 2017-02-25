@@ -51,7 +51,7 @@ public class FR91Layout extends Layout {
 		this.temperature=w/10.; // the temperature is a fraction of the width of the drawing area
 		this.minTemperature=0.01;
 		this.coolingConstant=0.50;
-		this.useCooling=false; // not use cooling system by default
+		this.useCooling=true; // not use cooling system by default
 		
 		System.out.println("done ("+N+" nodes)");
 		System.out.println("k="+k+" - temperature="+temperature);
