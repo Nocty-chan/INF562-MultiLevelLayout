@@ -116,15 +116,18 @@ public class MultilevelLayout extends FR91Layout {
 		    }		      
 		  }		  
 		}
-		this.computeLayoutOneGraph(this.graphs.get(0));
+		this.temperature = this.w / 10;
+		this.computeLayoutOneGraph(0, this.graphs.get(0));
 		this.iterationCount++;
-		System.out.println("Found layout in "+ this.totalNumberOfIterations + " iterations in total.");
 	}
 
 	public void simplify() {
 	  coarsenGraph();
 	}
 	
+	/*
+	 * Computes the simplified graphs and put them in a List of graphs
+	 */
 	 public void coarsenGraph() {
 	   this.graphs = new LinkedList<AdjacencyListGraph>();
 	   this.graphs.add(this.g);
@@ -212,8 +215,12 @@ public class MultilevelLayout extends FR91Layout {
 		return result;
 	}
 	
-	
+	/*
+	 * Computes the layout of one graph (given by index and graph), using FR91Layout method
+	 */
 	public void computeLayoutOneGraph(int index, AdjacencyListGraph graph) {
+	  this.totalNumberOfIterations = 0;
+	  double updatedConstant = k * Math.pow(Math.sqrt(7.0/4.0), index);
     if(useCooling==true)
       System.out.println("(temperature: "+this.temperature+")");
     else
@@ -230,7 +237,7 @@ public class MultilevelLayout extends FR91Layout {
         displacement = displacement.multiplyByScalar(min/norm);
         u.getPoint().translateOf(displacement);
         
-        if (displacement.squaredLength().doubleValue() > k) {
+        if (Math.sqrt(displacement.squaredLength().doubleValue()) > 0.01 * updatedConstant) {
           converged = 0;
         }
       }
@@ -239,7 +246,7 @@ public class MultilevelLayout extends FR91Layout {
       }
      this.totalNumberOfIterations++;
     }
-    System.out.println("Computed layout of graph "+ index);
+    System.out.println("Computed layout of graph "+ index + "with iterations " + this.totalNumberOfIterations);
   }
   
   /**

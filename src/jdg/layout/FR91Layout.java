@@ -170,40 +170,7 @@ public class FR91Layout extends Layout {
 
 		return displacement;
 	}
-	
-	/*public void repulsiveForce(Node u, Vector_3[] disp) {
-		double px=u.getPoint().x;
-		double py=u.getPoint().y;
-		double pz=u.getPoint().z;
-		
-		int indexU=u.index;
-		for(int i=0;i<indexU;i++) {
-			Node v=this.g.vertices.get(i);
-			if(v!=null && v.degree()>0) {
-				//delta=new Vector_3(v.getPoint(),p);
-				double dx=px-v.getPoint().x;
-				double dy=py-v.getPoint().y;
-				double dz=pz-v.getPoint().z;
-				//double norm=Math.sqrt(delta.squaredLength().doubleValue());
-				double norm=Math.sqrt(dx*dx+dy*dy+dz*dz);
-				double force=repulsiveForce(norm);
-				
-				dx=dx*force;
-				dy=dy*force;
-				dz=dz*force;
-				//Vector_3 delta2=delta.multiplyByScalar(force);
-				//disp[indexU]=disp[indexU].sum(delta2);
-				disp[indexU].x=disp[indexU].x+dx;
-				disp[indexU].y=disp[indexU].y+dy;
-				disp[indexU].z=disp[indexU].z+dz;
 
-				disp[i].x=disp[i].x+(-1*dx);
-				disp[i].y=disp[i].y+(-1*dy);
-				disp[i].z=disp[i].z+(-1*dz);
-			}
-		}
-	}*/
-	
 	/**
 	 * Compute, for each vertex, the displacement due to repulsive forces (between all nodes)
 	 * 
@@ -279,7 +246,7 @@ public class FR91Layout extends Layout {
 	 */	
 	protected void cooling() {
 		this.temperature=Math.max(this.temperature-coolingConstant, minTemperature);
-		//this.temperature=this.temperature*0.98; // variant
+		//this.temperature=this.temperature*0.90; // variant
 	}
 	
 	public String toString() {
